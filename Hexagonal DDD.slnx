@@ -1,7 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="Hexagonal DDD/HexagonalDDD.Presentation.csproj" Id="62a0aa57-879b-4318-b178-4966f06801a3" />
-    <Project Path="HexagonalDDD.Application/HexagonalDDD.Application.csproj" />
+    <Project Path="HexagonalDDD.Applicaion/HexagonalDDD.Application.csproj" Id="bf17d82e-2be9-4247-8304-43f0f008f808" />
     <Project Path="HexagonalDDD.Domain/HexagonalDDD.Domain.csproj" Id="5da274ec-de6d-40ef-b45d-7dc17686d279" />
     <Project Path="HexagonalDDD.Infraestructure/HexagonalDDD.Infraestructure.csproj" Id="6a08428f-43a2-42ba-b083-1070abc01189" />
   </Folder>

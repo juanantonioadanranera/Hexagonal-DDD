@@ -6,7 +6,7 @@ namespace HexagonalDDD.Domain.Aggregates.Vehicle
     {
         public Guid Id { get; private set; }
 
-        public string RegistrationNumber { get; private set; }
+        public string Registration { get; private set; }
 
         public string Brand { get; private set; }
 
@@ -21,7 +21,7 @@ namespace HexagonalDDD.Domain.Aggregates.Vehicle
         }
 
         public static VehicleAggregate Create(
-            string RegistrationNumber,
+            string registration,
             string brand,
             string model,
             DateTime manufactureDate)
@@ -31,7 +31,7 @@ namespace HexagonalDDD.Domain.Aggregates.Vehicle
             return new VehicleAggregate
             {
                 Id = Guid.NewGuid(),
-                RegistrationNumber = RegistrationNumber,
+                Registration = registration,
                 Brand = brand,
                 Model = model,
                 ManufactureDate = manufactureDate,

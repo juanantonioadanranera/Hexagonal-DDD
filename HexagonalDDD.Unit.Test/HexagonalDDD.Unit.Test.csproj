@@ -68,13 +68,23 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\FakeRentalRepository.cs" />
+    <Compile Include="Application\FakeVehicleRepository.cs" />
+    <Compile Include="Application\RentVehicleHandlerTests.cs" />
+    <Compile Include="Application\ReturnVehicleHandlerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RentalAggregateTests.cs" />
     <Compile Include="VehicleAggregateTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HexagonalDDD.Applicaion\HexagonalDDD.Application.csproj">
+      <Project>{bf17d82e-2be9-4247-8304-43f0f008f808}</Project>
+      <Name>HexagonalDDD.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HexagonalDDD.Domain\HexagonalDDD.Domain.csproj">
       <Project>{5da274ec-de6d-40ef-b45d-7dc17686d279}</Project>
       <Name>HexagonalDDD.Domain</Name>

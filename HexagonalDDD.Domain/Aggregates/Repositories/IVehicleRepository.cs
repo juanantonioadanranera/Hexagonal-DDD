@@ -12,7 +12,5 @@ namespace HexagonalDDD.Domain.Repositories
         Task<VehicleAggregate> GetByIdAsync(Guid id);
 
         Task<IReadOnlyList<VehicleAggregate>> GetAvailableAsync();
-        
-        Task<IReadOnlyList<VehicleAggregate>> GetRentedAsync();
     }
 }

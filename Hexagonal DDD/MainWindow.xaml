@@ -1,0 +1,268 @@
+﻿<Window x:Class="WPF_Hexagonal_DDD.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Vehicle Rental"
+        Height="650"
+        Width="900"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Grid.Row="0"
+            Text="Vehicle Rental"
+            FontSize="28"
+            FontWeight="Bold"
+            Margin="0,0,0,20"/>
+
+        <TabControl Grid.Row="1">
+            <TabItem Header="Vehicles">
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Text="New vehicle"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Margin="0,0,0,15"/>
+
+                    <StackPanel Grid.Row="1"
+                            Orientation="Horizontal"
+                            Margin="0,5">
+                        <TextBlock
+                            Text="RegistrationNumber:"
+                            Width="130"
+                            VerticalAlignment="Center"/>
+                        <TextBox
+                            x:Name="RegistrationNumberTextBox"
+                            Width="200"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        Margin="0,5">
+                        <TextBlock
+                        Text="Brand:"
+                        Width="130"
+                        VerticalAlignment="Center"/>
+                                <TextBox
+                        x:Name="BrandTextBox"
+                        Width="200"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="3"
+                        Orientation="Horizontal"
+                        Margin="0,5">
+                        <TextBlock
+                            Text="Model:"
+                            Width="130"
+                            VerticalAlignment="Center"/>
+                        <TextBox
+                            x:Name="ModelTextBox"
+                            Width="200"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="4"
+                        Orientation="Horizontal"
+                        Margin="0,5">
+                        <TextBlock
+                            Text="Manufacture date:"
+                            Width="130"
+                            VerticalAlignment="Center"/>
+                        <DatePicker
+                            x:Name="ManufactureDatePicker"
+                            Width="200"/>
+                    </StackPanel>
+
+                    <Button
+                        Grid.Row="5"
+                        x:Name="CreateVehicleButton"
+                        Content="Create vehicle"
+                        Width="140"
+                        Height="30"
+                        HorizontalAlignment="Left"
+                        Margin="130,15,0,15"
+                        Click="CreateVehicleButton_Click"/>
+                    <GroupBox
+                        Grid.Row="6"
+                        Header="Available vehicles"
+                        Margin="0,10,0,0">
+
+                        <DataGrid
+                            x:Name="AvailableVehiclesDataGrid"
+                            AutoGenerateColumns="False"
+                            IsReadOnly="True"
+                            Margin="10">
+
+                            <DataGrid.Columns>
+                                <DataGridTextColumn
+                                    Header="RegistrationNumber"
+                                    Binding="{Binding RegistrationNumber}"
+                                    Width="*" />
+
+                                <DataGridTextColumn
+                                    Header="Brand"
+                                    Binding="{Binding Brand}"
+                                    Width="*" />
+
+                                <DataGridTextColumn
+                                    Header="Model"
+                                    Binding="{Binding Model}"
+                                    Width="*" />
+
+                                <DataGridTextColumn
+                                    Header="Manufacture date"
+                                    Binding="{Binding ManufactureDate, StringFormat=d}"
+                                    Width="*" />
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Rent" Height="20" VerticalAlignment="Top">
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Text="Rent a vehicle"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Margin="0,0,0,15"/>
+
+                    <StackPanel
+                        Grid.Row="1"
+                        Orientation="Horizontal"
+                        Margin="0,5">
+
+                        <TextBlock
+                            Text="New customer:"
+                            Width="130"
+                            VerticalAlignment="Center"/>
+
+                        <TextBox
+                            x:Name="CustomerNameTextBox"
+                            Width="250"/>
+
+                        <Button
+                            x:Name="CreateCustomerButton"
+                            Content="Create customer"
+                            Width="130"
+                            Margin="10,0,0,0"
+                            Click="CreateCustomerButton_Click"/>
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Row="2"
+                        Orientation="Horizontal"
+                        Margin="0,15,0,5">
+
+                        <TextBlock
+                            Text="Customer:"
+                            Width="130"
+                            VerticalAlignment="Center"/>
+
+                        <ComboBox
+                            x:Name="CustomerComboBox"
+                            Width="250"
+                            DisplayMemberPath="Name"/>
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Row="3"
+                        Orientation="Horizontal"
+                        Margin="0,5">
+
+                        <TextBlock
+                            Text="Vehicle:"
+                            Width="130"
+                            VerticalAlignment="Center"/>
+
+                        <ComboBox
+                            x:Name="VehicleComboBox"
+                            Width="250"
+                            DisplayMemberPath="RegistrationNumber"/>
+                    </StackPanel>
+
+                    <Button
+                        Grid.Row="4"
+                        x:Name="RentVehicleButton"
+                        Content="Rent vehicle"
+                        Width="140"
+                        Height="30"
+                        HorizontalAlignment="Left"
+                        Margin="130,15,0,0"
+                        Click="RentVehicleButton_Click"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Return">
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+            Grid.Row="0"
+            Text="Return a vehicle"
+            FontSize="20"
+            FontWeight="Bold"
+            Margin="0,0,0,15"/>
+
+                    <StackPanel
+            Grid.Row="1"
+            Orientation="Horizontal"
+            Margin="0,5">
+
+                        <TextBlock
+                Text="Vehicle:"
+                Width="130"
+                VerticalAlignment="Center"/>
+
+                        <ComboBox
+                x:Name="RentedVehicleComboBox"
+                Width="250"
+                DisplayMemberPath="RegistrationNumber"/>
+                    </StackPanel>
+
+                    <Button
+                        Grid.Row="2"
+                        x:Name="ReturnVehicleButton"
+                        Content="Return vehicle"
+                        Width="140"
+                        Height="30"
+                        HorizontalAlignment="Left"
+                        Margin="130,15,0,0"
+                        Click="ReturnVehicleButton_Click"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        
+    </Grid>
+</Window>
