@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="RentingModel.Store" Provider="Oracle.ManagedDataAccess.Client" ProviderManifestToken="18.0" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CUSTOMERS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="varchar2" MaxLength="36" Nullable="false" />
+          <Property Name="NAME" Type="varchar2" MaxLength="150" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RENTALS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="varchar2" MaxLength="36" Nullable="false" />
+          <Property Name="VEHICLE_ID" Type="varchar2" MaxLength="36" Nullable="false" />
+          <Property Name="CUSTOMER_ID" Type="varchar2" MaxLength="36" Nullable="false" />
+          <Property Name="RENTAL_DATE" Type="date" Nullable="false" />
+          <Property Name="RETURN_DATE" Type="date" />
+          <Property Name="CREATED_AT" Type="timestamp" Precision="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="VEHICLES">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="varchar2" MaxLength="36" Nullable="false" />
+          <Property Name="REGISTRATION_NUMBER" Type="varchar2" MaxLength="20" Nullable="false" />
+          <Property Name="BRAND" Type="varchar2" MaxLength="100" Nullable="false" />
+          <Property Name="MODEL" Type="varchar2" MaxLength="100" Nullable="false" />
+          <Property Name="MANUFACTURE_DATE" Type="date" Nullable="false" />
+          <Property Name="STATUS" Type="varchar2" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_RENTALS_CUSTOMERS">
+          <End Role="CUSTOMERS" Type="Self.CUSTOMERS" Multiplicity="1" />
+          <End Role="RENTALS" Type="Self.RENTALS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CUSTOMERS">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RENTALS">
+              <PropertyRef Name="CUSTOMER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RENTALS_VEHICLES">
+          <End Role="VEHICLES" Type="Self.VEHICLES" Multiplicity="1" />
+          <End Role="RENTALS" Type="Self.RENTALS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VEHICLES">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RENTALS">
+              <PropertyRef Name="VEHICLE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RentingModelStoreContainer">
+          <EntitySet Name="CUSTOMERS" EntityType="Self.CUSTOMERS" Schema="RENTING" store:Type="Tables" />
+          <EntitySet Name="RENTALS" EntityType="Self.RENTALS" Schema="RENTING" store:Type="Tables" />
+          <EntitySet Name="VEHICLES" EntityType="Self.VEHICLES" Schema="RENTING" store:Type="Tables" />
+          <AssociationSet Name="FK_RENTALS_CUSTOMERS" Association="Self.FK_RENTALS_CUSTOMERS">
+            <End Role="CUSTOMERS" EntitySet="CUSTOMERS" />
+            <End Role="RENTALS" EntitySet="RENTALS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RENTALS_VEHICLES" Association="Self.FK_RENTALS_VEHICLES">
+            <End Role="VEHICLES" EntitySet="VEHICLES" />
+            <End Role="RENTALS" EntitySet="RENTALS" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="RentingModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CUSTOMERS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" MaxLength="36" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NAME" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="RENTALS" Relationship="Self.FK_RENTALS_CUSTOMERS" FromRole="CUSTOMERS" ToRole="RENTALS" />
+        </EntityType>
+        <EntityType Name="RENTALS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" MaxLength="36" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="VEHICLE_ID" Type="String" MaxLength="36" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CUSTOMER_ID" Type="String" MaxLength="36" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RENTAL_DATE" Type="DateTime" Nullable="false" />
+          <Property Name="RETURN_DATE" Type="DateTime" />
+          <NavigationProperty Name="CUSTOMERS" Relationship="Self.FK_RENTALS_CUSTOMERS" FromRole="RENTALS" ToRole="CUSTOMERS" />
+          <NavigationProperty Name="VEHICLES" Relationship="Self.FK_RENTALS_VEHICLES" FromRole="RENTALS" ToRole="VEHICLES" />
+          <Property Name="CREATED_AT" Type="DateTime" Nullable="false" Precision="6" />
+        </EntityType>
+        <EntityType Name="VEHICLES">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" MaxLength="36" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="REGISTRATION_NUMBER" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BRAND" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MODEL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MANUFACTURE_DATE" Type="DateTime" Nullable="false" />
+          <Property Name="STATUS" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="RENTALS" Relationship="Self.FK_RENTALS_VEHICLES" FromRole="VEHICLES" ToRole="RENTALS" />
+        </EntityType>
+        <Association Name="FK_RENTALS_CUSTOMERS">
+          <End Role="CUSTOMERS" Type="Self.CUSTOMERS" Multiplicity="1" />
+          <End Role="RENTALS" Type="Self.RENTALS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CUSTOMERS">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RENTALS">
+              <PropertyRef Name="CUSTOMER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RENTALS_VEHICLES">
+          <End Role="VEHICLES" Type="Self.VEHICLES" Multiplicity="1" />
+          <End Role="RENTALS" Type="Self.RENTALS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VEHICLES">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RENTALS">
+              <PropertyRef Name="VEHICLE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CUSTOMERS" EntityType="Self.CUSTOMERS" />
+          <EntitySet Name="RENTALS" EntityType="Self.RENTALS" />
+          <EntitySet Name="VEHICLES" EntityType="Self.VEHICLES" />
+          <AssociationSet Name="FK_RENTALS_CUSTOMERS" Association="Self.FK_RENTALS_CUSTOMERS">
+            <End Role="CUSTOMERS" EntitySet="CUSTOMERS" />
+            <End Role="RENTALS" EntitySet="RENTALS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RENTALS_VEHICLES" Association="Self.FK_RENTALS_VEHICLES">
+            <End Role="VEHICLES" EntitySet="VEHICLES" />
+            <End Role="RENTALS" EntitySet="RENTALS" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="RentingModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="CUSTOMERS">
+            <EntityTypeMapping TypeName="RentingModel.CUSTOMERS">
+              <MappingFragment StoreEntitySet="CUSTOMERS">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="NAME" ColumnName="NAME" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RENTALS">
+            <EntityTypeMapping TypeName="RentingModel.RENTALS">
+              <MappingFragment StoreEntitySet="RENTALS">
+                <ScalarProperty Name="CREATED_AT" ColumnName="CREATED_AT" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="VEHICLE_ID" ColumnName="VEHICLE_ID" />
+                <ScalarProperty Name="CUSTOMER_ID" ColumnName="CUSTOMER_ID" />
+                <ScalarProperty Name="RENTAL_DATE" ColumnName="RENTAL_DATE" />
+                <ScalarProperty Name="RETURN_DATE" ColumnName="RETURN_DATE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VEHICLES">
+            <EntityTypeMapping TypeName="RentingModel.VEHICLES">
+              <MappingFragment StoreEntitySet="VEHICLES">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="REGISTRATION_NUMBER" ColumnName="REGISTRATION_NUMBER" />
+                <ScalarProperty Name="BRAND" ColumnName="BRAND" />
+                <ScalarProperty Name="MODEL" ColumnName="MODEL" />
+                <ScalarProperty Name="MANUFACTURE_DATE" ColumnName="MANUFACTURE_DATE" />
+                <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

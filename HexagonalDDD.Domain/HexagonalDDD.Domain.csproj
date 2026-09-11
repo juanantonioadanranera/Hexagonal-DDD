@@ -64,7 +64,6 @@
     <Compile Include="Aggregates\Rental\RentalAggregate.cs" />
     <Compile Include="Aggregates\Vehicle\VehicleAggregate.cs" />
     <Compile Include="Aggregates\Vehicle\VehicleStatus.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ICustomerRepository.cs" />
     <Compile Include="Repositories\IItemRepository.cs" />

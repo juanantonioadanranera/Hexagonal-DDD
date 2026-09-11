@@ -26,5 +26,15 @@ namespace HexagonalDDD.Domain.Aggregates.Customer
                 Name = name
             };
         }
+        public static CustomerAggregate Rehydrate(
+            Guid id,
+            string name)
+        {
+            return new CustomerAggregate
+            {
+                Id = id,
+                Name = name
+            };
+        }
     }
 }

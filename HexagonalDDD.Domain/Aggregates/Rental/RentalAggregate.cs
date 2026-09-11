@@ -47,5 +47,21 @@ namespace HexagonalDDD.Domain.Aggregates.Rental
 
             ReturnDate = DateTime.Now;
         }
+        public static RentalAggregate Rehydrate(
+            Guid id,
+            Guid vehicleId,
+            Guid customerId,
+            DateTime rentalDate,
+            DateTime? returnDate)
+        {
+            return new RentalAggregate
+            {
+                Id = id,
+                VehicleId = vehicleId,
+                CustomerId = customerId,
+                RentalDate = rentalDate,
+                ReturnDate = returnDate
+            };
+        }
     }
 }

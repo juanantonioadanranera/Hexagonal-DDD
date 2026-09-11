@@ -1,0 +1,78 @@
+# Oracle Database 26ai Free - Docker Compose
+# Imagen oficial: container-registry.oracle.com/database/free (26ai Free)
+# Límites Free: 2 CPUs, 2 GB RAM, 12 GB de datos en disco.
+# Configura tus valores copiando .env.example a .env.
+
+name: oracle-26ai-free
+
+services:
+  oracle-db:
+    image: ${ORACLE_IMAGE:-container-registry.oracle.com/database/free:latest}
+    container_name: oracle-26ai-free
+    hostname: oracle-db
+    init: true
+
+    ports:
+      - "${ORACLE_PORT:-1521}:1521"
+
+    environment:
+      # Contraseña de SYS, SYSTEM y PDBADMIN.
+      - ORACLE_PWD=${ORACLE_PWD:-OraclePassword123}
+      - ORACLE_CHARACTERSET=${ORACLE_CHARACTERSET:-AL32UTF8}
+      # En Free el archive log consume parte de los 12 GB; off salvo necesidad.
+      - ENABLE_ARCHIVELOG=${ENABLE_ARCHIVELOG:-false}
+      - ENABLE_FORCE_LOGGING=${ENABLE_FORCE_LOGGING:-true}
+
+    volumes:
+      # Persistencia de la BD (volumen gestionado por Docker).
+      - oracle-data:/opt/oracle/oradata
+      # Scripts de setup (corren una vez tras crear la BD) — solo lectura.
+      - ./scripts/setup:/opt/oracle/scripts/setup:ro
+      # Scripts de startup (corren en cada arranque) — solo lectura.
+      - ./scripts/startup:/opt/oracle/scripts/startup:ro
+
+    healthcheck:
+      # Verifica la PDB donde vive la app (no el CDB).
+      test:
+        - CMD
+        - sh
+        - -c
+        - "echo 'SELECT 1 FROM DUAL;' | sqlplus -s system/$$ORACLE_PWD@FREEPDB1"
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+    restart: unless-stopped
+
+    # Memoria compartida para Oracle (configurable).
+    shm_size: ${ORACLE_SHM_SIZE:-1gb}
+
+    # Límites de recursos alineados con la edición Free.
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2g
+
+    # Oracle abre muchos descriptores de archivo.
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+
+    networks:
+      - oracle-network
+
+    labels:
+      - "app=oracle-database"
+      - "version=26ai-free"
+      - "environment=development"
+
+volumes:
+  oracle-data:
+    driver: local
+
+networks:
+  oracle-network:
+    driver: bridge

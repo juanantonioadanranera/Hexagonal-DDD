@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using HexagonalDDD.Domain.Repositories;
+﻿using HexagonalDDD.Domain.Repositories;
 using HexagonalDDD.Infraestructure.Persistence.InMemory;
+using HexagonalDDD.Infraestructure.Persistence.Oracle;
+using Microsoft.Extensions.DependencyInjection;
+using WPFHexagonalDDD.Infraestructure;
 
 namespace HexagonalDDD.Infraestructure.DependencyInjection
 {
@@ -9,10 +11,14 @@ namespace HexagonalDDD.Infraestructure.DependencyInjection
         public static IServiceCollection AddInfrastructure(
             this IServiceCollection services)
         {
-            services.AddSingleton<IVehicleRepository, VehicleRepository>();
-            services.AddSingleton<IRentalRepository, RentalRepository>();
-            services.AddSingleton<ICustomerRepository, CustomerRepository>();
 
+            services.AddTransient<Entities>();
+            //services.AddSingleton<IVehicleRepository, VehicleRepository>();
+            services.AddTransient<IVehicleRepository, OracleVehicleRepository>();
+            //services.AddSingleton<IRentalRepository, RentalRepository>();
+            services.AddTransient<IRentalRepository, OracleRentalRepository>();
+            //services.AddSingleton<ICustomerRepository, CustomerRepository>();
+            services.AddTransient<ICustomerRepository, OracleCustomerRepository>();
             return services;
         }
     }

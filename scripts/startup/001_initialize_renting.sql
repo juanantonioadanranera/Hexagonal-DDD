@@ -1,0 +1,134 @@
+SET SQLBLANKLINES ON
+WHENEVER SQLERROR CONTINUE
+
+ALTER SESSION SET CONTAINER = FREEPDB1;
+
+DECLARE
+    v_count NUMBER;
+BEGIN
+    SELECT COUNT(*)
+    INTO v_count
+    FROM DBA_USERS
+    WHERE USERNAME = 'RENTING';
+
+    IF v_count = 0 THEN
+        EXECUTE IMMEDIATE '
+            CREATE USER RENTING
+            IDENTIFIED BY Renting123
+            DEFAULT TABLESPACE USERS
+            TEMPORARY TABLESPACE TEMP
+        ';
+
+        EXECUTE IMMEDIATE 'GRANT CREATE SESSION TO RENTING';
+        EXECUTE IMMEDIATE 'GRANT CREATE TABLE TO RENTING';
+        EXECUTE IMMEDIATE 'GRANT CREATE SEQUENCE TO RENTING';
+        EXECUTE IMMEDIATE 'GRANT CREATE VIEW TO RENTING';
+        EXECUTE IMMEDIATE 'GRANT UNLIMITED TABLESPACE TO RENTING';
+    END IF;
+END;
+/
+
+ALTER SESSION SET CURRENT_SCHEMA = RENTING;
+
+DECLARE
+    v_count NUMBER;
+BEGIN
+    SELECT COUNT(*)
+    INTO v_count
+    FROM ALL_TABLES
+    WHERE OWNER = 'RENTING'
+      AND TABLE_NAME = 'CUSTOMERS';
+
+    IF v_count = 0 THEN
+        EXECUTE IMMEDIATE '
+            CREATE TABLE CUSTOMERS
+            (
+                ID   VARCHAR2(36)  NOT NULL,
+                NAME VARCHAR2(150) NOT NULL,
+                CONSTRAINT PK_CUSTOMERS PRIMARY KEY (ID)
+            )
+        ';
+    END IF;
+END;
+/
+
+DECLARE
+    v_count NUMBER;
+BEGIN
+    SELECT COUNT(*)
+    INTO v_count
+    FROM ALL_TABLES
+    WHERE OWNER = 'RENTING'
+      AND TABLE_NAME = 'VEHICLES';
+
+    IF v_count = 0 THEN
+        EXECUTE IMMEDIATE '
+            CREATE TABLE VEHICLES
+            (
+                ID                  VARCHAR2(36)  NOT NULL,
+                REGISTRATION_NUMBER VARCHAR2(20)  NOT NULL,
+                BRAND               VARCHAR2(100) NOT NULL,
+                MODEL               VARCHAR2(100) NOT NULL,
+                MANUFACTURE_DATE    DATE          NOT NULL,
+                STATUS              VARCHAR2(20)  NOT NULL,
+                CONSTRAINT PK_VEHICLES PRIMARY KEY (ID),
+                CONSTRAINT UQ_VEHICLES_REGISTRATION UNIQUE (REGISTRATION_NUMBER),
+                CONSTRAINT CK_VEHICLES_STATUS CHECK (STATUS IN (''Available'', ''Rented''))
+            )
+        ';
+    END IF;
+END;
+/
+
+DECLARE
+    v_count NUMBER;
+BEGIN
+    SELECT COUNT(*)
+    INTO v_count
+    FROM ALL_TABLES
+    WHERE OWNER = 'RENTING'
+      AND TABLE_NAME = 'RENTALS';
+
+    IF v_count = 0 THEN
+        EXECUTE IMMEDIATE '
+            CREATE TABLE RENTALS
+            (
+                ID          VARCHAR2(36) NOT NULL,
+                VEHICLE_ID  VARCHAR2(36) NOT NULL,
+                CUSTOMER_ID VARCHAR2(36) NOT NULL,
+                RENTAL_DATE DATE         NOT NULL,
+                RETURN_DATE DATE,
+                CREATED_AT  TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
+                CONSTRAINT PK_RENTALS PRIMARY KEY (ID),
+                CONSTRAINT FK_RENTALS_VEHICLES
+                    FOREIGN KEY (VEHICLE_ID)
+                    REFERENCES VEHICLES (ID),
+                CONSTRAINT FK_RENTALS_CUSTOMERS
+                    FOREIGN KEY (CUSTOMER_ID)
+                    REFERENCES CUSTOMERS (ID)
+            )
+        ';
+    END IF;
+END;
+/
+
+DECLARE
+    v_count NUMBER;
+BEGIN
+    SELECT COUNT(*)
+    INTO v_count
+    FROM ALL_TAB_COLUMNS
+    WHERE OWNER = 'RENTING'
+      AND TABLE_NAME = 'RENTALS'
+      AND COLUMN_NAME = 'CREATED_AT';
+
+    IF v_count = 0 THEN
+        EXECUTE IMMEDIATE '
+            ALTER TABLE RENTALS
+            ADD CREATED_AT TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL
+        ';
+    END IF;
+END;
+/
+
+COMMIT;

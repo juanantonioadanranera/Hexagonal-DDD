@@ -38,7 +38,24 @@ namespace HexagonalDDD.Domain.Aggregates.Vehicle
                 Status = VehicleStatus.Available
             };
         }
-
+        public static VehicleAggregate Rehydrate(
+            Guid id,
+            string registrationNumber,
+            string brand,
+            string model,
+            DateTime manufactureDate,
+            VehicleStatus status)
+        {
+            return new VehicleAggregate
+            {
+                Id = id,
+                RegistrationNumber = registrationNumber,
+                Brand = brand,
+                Model = model,
+                ManufactureDate = manufactureDate,
+                Status = status
+            };
+        }
         public void Rent()
         {
             if (Status == VehicleStatus.Rented)

@@ -7,8 +7,8 @@
     <ProjectGuid>{BF17D82E-2BE9-4247-8304-43F0F008F808}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WPFHexagonalDDD.Applicaion</RootNamespace>
-    <AssemblyName>WPFHexagonalDDD.Applicaion</AssemblyName>
+    <RootNamespace>WPFHexagonalDDD.Application</RootNamespace>
+    <AssemblyName>WPFHexagonalDDD.Application</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
