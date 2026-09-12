@@ -205,9 +205,9 @@ Proyecto:
 HexagonalDDD.Infraestructure.Test
 ```
 
-Las pruebas de infraestructura verifican la implementación de los repositorios y su interacción real con Oracle.
+Las pruebas de infraestructura verifican tanto la interacción real con Oracle como la recepción y validación de datos a nivel de aplicación, sin necesidad de recorrer todas las capas.
 
-Se comprueba, entre otros aspectos, la persistencia y recuperación de vehículos mediante `OracleVehicleRepository`.
+Se comprueba la persistencia y recuperación de vehículos mediante `OracleVehicleRepository`. Además, se incluye una prueba sobre `CreateVehicleHandler` que valida el rechazo de un vehículo con más de cinco años de antigüedad y comprueba que, cuando la validación falla, no se invoca al repositorio.
 
 Los datos utilizados por estas pruebas se eliminan después de su ejecución para evitar dejar información residual en la base de datos.
 
