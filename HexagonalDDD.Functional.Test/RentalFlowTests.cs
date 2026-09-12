@@ -17,6 +17,70 @@ namespace HexagonalDDD.Functional.Test
     public class RentalFlowTests
     {
         [TestMethod]
+        public async Task RentReturnRent_WithSeparateLongLivedContexts_ShouldPersistEachTransition()
+        {
+            var registration = "FT-" + Guid.NewGuid().ToString("N").Substring(0, 8);
+            var customerName = "Functional-" + Guid.NewGuid().ToString("N").Substring(0, 8);
+            try
+            {
+                // Match the separate contexts retained by the WPF handlers.
+                using (var setup = new Entities())
+                using (var reads = new Entities())
+                using (var rentReads = new Entities())
+                using (var rentalReads = new Entities())
+                using (var rentWrites = new Entities())
+                using (var returnVehicles = new Entities())
+                using (var returnRentals = new Entities())
+                {
+                    var vehicle = VehicleAggregate.Create(registration, "Test", "Cycle", DateTime.Today.AddYears(-1));
+                    var customer = HexagonalDDD.Domain.Aggregates.Customer.CustomerAggregate.Create(customerName);
+                    await new OracleVehicleRepository(setup).SaveAsync(vehicle);
+                    await new OracleCustomerRepository(setup).SaveAsync(customer);
+                    var list = new OracleVehicleRepository(reads);
+                    var rent = new RentVehicleHandler(new OracleVehicleRepository(rentReads),
+                        new OracleRentalRepository(rentalReads), new OracleRentalUnitOfWork(rentWrites));
+                    var giveBack = new HexagonalDDD.Application.UseCases.Return_Vehicle.ReturnVehicleHandler(
+                        new OracleVehicleRepository(returnVehicles), new OracleRentalRepository(returnRentals));
+
+                    Assert.IsTrue((await list.GetAvailableAsync()).Any(v => v.Id == vehicle.Id));
+                    // More than one return also exercises contexts cached by the return handler.
+                    for (var cycle = 0; cycle < 3; cycle++)
+                    {
+                        await rent.ExecuteAsync(new RentVehicleCommand { VehicleId = vehicle.Id, CustomerId = customer.Id });
+                        Assert.IsFalse((await list.GetAvailableAsync()).Any(v => v.Id == vehicle.Id));
+                        Assert.AreEqual(VehicleStatus.Rented,
+                            (await list.GetRentedAsync()).Single(v => v.Id == vehicle.Id).Status);
+                        using (var verification = new Entities())
+                        {
+                            var stored = await verification.VEHICLES.FindAsync(vehicle.Id.ToString());
+                            Assert.AreEqual("Rented", stored.STATUS);
+                            var rentals = (await verification.RENTALS.ToListAsync())
+                                .Where(r => r.VEHICLE_ID == vehicle.Id.ToString()).ToList();
+                            Assert.AreEqual(cycle + 1, rentals.Count);
+                            Assert.AreEqual(1, rentals.Count(r => r.RETURN_DATE == null));
+                        }
+                        if (cycle == 2) break;
+                        await giveBack.ExecuteAsync(new HexagonalDDD.Application.UseCases.Return_Vehicle.ReturnVehicleCommand
+                            { VehicleId = vehicle.Id });
+                        Assert.AreEqual(VehicleStatus.Available,
+                            (await list.GetAvailableAsync()).Single(v => v.Id == vehicle.Id).Status);
+                        Assert.IsFalse((await list.GetRentedAsync()).Any(v => v.Id == vehicle.Id));
+                        using (var verification = new Entities())
+                        {
+                            Assert.AreEqual("Available", (await verification.VEHICLES.FindAsync(vehicle.Id.ToString())).STATUS);
+                            Assert.IsFalse((await verification.RENTALS.ToListAsync())
+                                .Any(r => r.VEHICLE_ID == vehicle.Id.ToString() && r.RETURN_DATE == null));
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                await CleanupTestDataAsync(registration, customerName);
+            }
+        }
+
+        [TestMethod]
         public async Task CreateCustomerVehicleAndRent_ShouldCompleteRentalFlow()
         {
             string registrationNumber =
@@ -38,6 +102,9 @@ namespace HexagonalDDD.Functional.Test
                     var rentalRepository =
                         new OracleRentalRepository(context);
 
+                    var rentalUnitOfWork =
+                        new OracleRentalUnitOfWork(context);
+
                     var createVehicleHandler =
                         new CreateVehicleHandler(vehicleRepository);
 
@@ -47,7 +114,8 @@ namespace HexagonalDDD.Functional.Test
                     var rentVehicleHandler =
                         new RentVehicleHandler(
                             vehicleRepository,
-                            rentalRepository);
+                            rentalRepository,
+                            rentalUnitOfWork);
 
                     await createVehicleHandler.ExecuteAsync(
                         new CreateVehicleCommand

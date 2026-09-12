@@ -39,6 +39,7 @@ namespace HexagonalDDD.Infraestructure.Persistence.Oracle
             }
             else
             {
+                await _context.Entry(entity).ReloadAsync();
                 entity.REGISTRATION_NUMBER = vehicle.RegistrationNumber;
                 entity.BRAND = vehicle.Brand;
                 entity.MODEL = vehicle.Model;
@@ -57,6 +58,8 @@ namespace HexagonalDDD.Infraestructure.Persistence.Oracle
             if (entity == null)
                 return null;
 
+            await _context.Entry(entity).ReloadAsync();
+
             return VehicleAggregate.Rehydrate(
                 Guid.Parse(entity.ID),
                 entity.REGISTRATION_NUMBER,
@@ -71,6 +74,7 @@ namespace HexagonalDDD.Infraestructure.Persistence.Oracle
         public async Task<IReadOnlyList<VehicleAggregate>> GetAvailableAsync()
         {
             var entities = await _context.VEHICLES
+                .AsNoTracking()
                 .Where(x => x.STATUS == "Available")
                 .ToListAsync();
 
@@ -92,6 +96,7 @@ namespace HexagonalDDD.Infraestructure.Persistence.Oracle
         public async Task<IReadOnlyList<VehicleAggregate>> GetRentedAsync()
         {
             var entities = await _context.VEHICLES
+                .AsNoTracking()
                 .Where(x => x.STATUS == "Rented")
                 .ToListAsync();
 

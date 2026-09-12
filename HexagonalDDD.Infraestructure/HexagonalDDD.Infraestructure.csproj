@@ -126,6 +126,7 @@
     <Compile Include="Persistence\InMemory\VehicleRepository.cs" />
     <Compile Include="Persistence\Oracle\OracleCustomerRepository.cs" />
     <Compile Include="Persistence\Oracle\OracleRentalRepository.cs" />
+    <Compile Include="Persistence\Oracle\OracleRentalUnitOfWork.cs" />
     <Compile Include="Persistence\Oracle\OracleVehicleRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RENTALS.cs">

@@ -54,8 +54,9 @@ Para facilitar la ejecución de la prueba sin necesidad de disponer de una insta
 
 ### Requisitos
 
-- Visual Studio 2022
-- .NET Framework 4.8
+- Visual Studio 2022 (solución desarrollada y probada con Visual Studio 2022 17.14)
+- Workload **Desarrollo de escritorio de .NET**
+- .NET Framework 4.8 / .NET Framework 4.8 Targeting Pack
 - Docker Desktop
 
 ### Arranque de la base de datos

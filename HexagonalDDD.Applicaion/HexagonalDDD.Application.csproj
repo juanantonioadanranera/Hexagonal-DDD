@@ -92,10 +92,6 @@
       <Project>{5da274ec-de6d-40ef-b45d-7dc17686d279}</Project>
       <Name>HexagonalDDD.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HexagonalDDD.Infraestructure\HexagonalDDD.Infraestructure.csproj">
-      <Project>{6a08428f-43a2-42ba-b083-1070abc01189}</Project>
-      <Name>HexagonalDDD.Infraestructure</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DTOs\" />

@@ -9,13 +9,16 @@ namespace HexagonalDDD.Application.UseCases.Rent_Vehicle
     {
         private readonly IVehicleRepository _vehicleRepository;
         private readonly IRentalRepository _rentalRepository;
+        private readonly IRentalUnitOfWork _unitOfWork;
 
         public RentVehicleHandler(
             IVehicleRepository vehicleRepository,
-            IRentalRepository rentalRepository)
+            IRentalRepository rentalRepository,
+            IRentalUnitOfWork unitOfWork)
         {
             _vehicleRepository = vehicleRepository;
             _rentalRepository = rentalRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task ExecuteAsync(RentVehicleCommand command)
@@ -45,8 +48,9 @@ namespace HexagonalDDD.Application.UseCases.Rent_Vehicle
                 command.VehicleId,
                 command.CustomerId);
 
-            await _vehicleRepository.SaveAsync(vehicle);
-            await _rentalRepository.SaveAsync(rental);
+            await _unitOfWork.SaveRentalAsync(
+                vehicle,
+                rental);
         }
     }
 }

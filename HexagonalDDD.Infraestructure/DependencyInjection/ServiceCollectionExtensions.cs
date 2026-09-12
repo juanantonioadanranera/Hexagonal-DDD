@@ -19,6 +19,7 @@ namespace HexagonalDDD.Infraestructure.DependencyInjection
             services.AddTransient<IRentalRepository, OracleRentalRepository>();
             //services.AddSingleton<ICustomerRepository, CustomerRepository>();
             services.AddTransient<ICustomerRepository, OracleCustomerRepository>();
+            services.AddTransient<IRentalUnitOfWork, OracleRentalUnitOfWork>();
             return services;
         }
     }

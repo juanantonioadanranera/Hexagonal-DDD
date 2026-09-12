@@ -51,6 +51,7 @@ namespace HexagonalDDD.Infraestructure.Persistence.Oracle
             var customerIdString = customerId.ToString();
 
             var entity = await _context.RENTALS
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x =>
                     x.CUSTOMER_ID == customerIdString &&
                     x.RETURN_DATE == null);
@@ -71,6 +72,7 @@ namespace HexagonalDDD.Infraestructure.Persistence.Oracle
             var vehicleIdString = vehicleId.ToString();
 
             var entity = await _context.RENTALS
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x =>
                     x.VEHICLE_ID == vehicleIdString &&
                     x.RETURN_DATE == null);
